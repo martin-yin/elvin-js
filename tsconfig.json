@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "sourceMap": false,
+    "moduleResolution": "node",
+    "allowJs": false,
+    "preserveConstEnums": true,
+    "strict": false,
+    "noUnusedLocals": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": false,
+    "target": "ES5", // 编译成什么版本
+    "module": "ESNext", // 当前代码语法
+    "outDir": "./lib",
+    "declarationDir": "./lib/types",
+    "types": [
+      "node"
+    ],
+    "allowUnreachableCode": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "removeComments": false,
+    "noImplicitAny": false,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "es6",
+      "dom"
+    ]
+  },
+  "include": [
+    "packages"
+  ]
+}

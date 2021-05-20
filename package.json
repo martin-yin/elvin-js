@@ -1,0 +1,32 @@
+{
+  "name": "evan-js",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./lib/index.js",
+  "module": "lib/index.esm.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "format": "prettier --write packages/**/*.{ts,js}",
+    "tsc": "tsc --watch",
+    "build": "set NODE_ENV=production&& rollup -c rollup.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@types/node": "^15.3.1",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
+    "error-stack-parser": "^2.0.6",
+    "prettier": "^2.3.0",
+    "rollup": "^2.48.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-filesize": "^9.1.1",
+    "rollup-plugin-progress": "^1.1.2",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-uglify": "^6.0.4",
+    "typescript": "^4.2.4",
+    "ua-parser-js": "^0.7.28",
+    "uglify-js": "^3.13.7"
+  }
+}
