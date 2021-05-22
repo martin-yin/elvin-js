@@ -40,11 +40,12 @@ export function setupReplace(): void {
     },
     type: EVENTTYPES.UNHANDLEDREJECTION
   })
-  // addReplaceHandler({
-  //   callback: (data) => {
-  //   },
-  //   type: EVENTTYPES.DOM,
-  // });
+  addReplaceHandler({
+    callback: (data) => {
+      HandleEvents.handleDomOperation(data)
+    },
+    type: EVENTTYPES.DOM,
+  });
   addReplaceHandler({
     callback: (e: HashChangeEvent) => {
       HandleEvents.handleHashchange(e)

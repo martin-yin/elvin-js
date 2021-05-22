@@ -22,7 +22,7 @@ export class TransportData {
     data = this.getTransportData(data)
     const requestFun = (): void => {
       const xhr = new XMLHttpRequest()
-      xhr.open(EMethods.Post, `${this.url}`)
+      xhr.open(EMethods.Post, `${this.url}?action_type=${data.action_type}&monitor_id=${data.monitor_id}`)
       xhr.setRequestHeader('Content-Type', 'application/json')
       xhr.withCredentials = true
       xhr.send(JSON.stringify(data))
@@ -42,33 +42,15 @@ export class TransportData {
     return this.eventId
   }
 
-  getActionMethod(data) {
-    let action = ''
-    if (data.action_type == 'PAGE_LOAD') {
-      action = 'performance'
-    } else if (data.action_type == 'RESOURCE_ERROR') {
-      action = 'resource'
-    } else if (data.action_type == 'OPERATION') {
-      action = 'operation'
-    } else if (data.action_type == 'JS_ERROR') {
-      action = 'issues'
-    } else if (data.action_type == 'HTTP_LOG') {
-      action = 'http'
-    } else if (data.action_type == 'PAGE_VIEW') {
-      action = 'view'
-    }
-    return action
-  }
 
   getTransportData(data) {
-    const action = this.getActionMethod(data)
     const uaParser = getUaResult()
+
     return {
       ...data,
       user_id: this.getUserId(),
       monitor_id: this.getMonitorId(),
       event_id: this.getEventId(),
-      action,
       ...uaParser
     }
   }

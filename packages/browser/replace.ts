@@ -1,5 +1,5 @@
 import { supportsHistory, _global } from '../core/global'
-import { options, setTraceId } from '../core/options'
+import { setTraceId } from '../core/options'
 import { ReplaceHandler, subscribeEvent, triggerHandlers } from '../core/subscribe'
 import { transportData } from '../core/transportData'
 import { EVENTTYPES, HTTPTYPE, voidFun } from '../shared'
@@ -9,9 +9,9 @@ import { EMethods } from '../types/options'
 import { getLocationHref, getTimestamp, getYMDHMS, on, replaceOld } from '../utils/helpers'
 import { isExistProperty, variableTypeDetection } from '../utils/is'
 
-function isFilterHttpUrl(url: string) {
-  return options.filterXhrUrlRegExp && options.filterXhrUrlRegExp.test(url)
-}
+// function isFilterHttpUrl(url: string) {
+//   return options.filterXhrUrlRegExp && options.filterXhrUrlRegExp.test(url)
+// }
 
 function replace(type: EVENTTYPES) {
   switch (type) {
@@ -87,9 +87,10 @@ function xhrReplace(): void {
         this.report_xhr.traceId = traceId
         this.setRequestHeader(headerFieldName, traceId)
       })
-      options.beforeAppAjaxSend && options.beforeAppAjaxSend({ method, url }, this)
+      // options.beforeAppAjaxSend && options.beforeAppAjaxSend({ method, url }, this)
       on(this, 'loadend', function (this: REPORTXMLHttpRequest) {
-        if ((method === EMethods.Post && transportData.isSdkTransportUrl(url)) || isFilterHttpUrl(url))
+        // || isFilterHttpUrl(url)
+        if ((method === EMethods.Post && transportData.isSdkTransportUrl(url)))
           // 这里仅用于开发测试
           return
 
