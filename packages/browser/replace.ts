@@ -1,5 +1,4 @@
 import { supportsHistory, _global } from '../core/global'
-import { setTraceId } from '../core/options'
 import { ReplaceHandler, subscribeEvent, triggerHandlers } from '../core/subscribe'
 import { transportData } from '../core/transportData'
 import { EVENTTYPES, HTTPTYPE, voidFun } from '../shared'
@@ -83,11 +82,6 @@ function xhrReplace(): void {
   replaceOld(originalXhrProto, 'send', (originalSend: voidFun): voidFun => {
     return function (this: REPORTXMLHttpRequest, ...args: any[]): void {
       const { method, url } = this.report_xhr
-      setTraceId(url, (headerFieldName: string, traceId: string) => {
-        this.report_xhr.traceId = traceId
-        this.setRequestHeader(headerFieldName, traceId)
-      })
-      // options.beforeAppAjaxSend && options.beforeAppAjaxSend({ method, url }, this)
       on(this, 'loadend', function (this: REPORTXMLHttpRequest) {
         // || isFilterHttpUrl(url)
         if ((method === EMethods.Post && transportData.isSdkTransportUrl(url)))

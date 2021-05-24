@@ -9,7 +9,7 @@ const resourceMap = {
 export function resourceTransform(target: ResourceErrorTarget) {
   return {
     page_url: getLocationHref(),
-    action_type: 'RESOURCE_ERROR',
+    action_type: 'RESOURCE',
     happen_time: getTimestamp(),
     happen_day: getYMDHMS(),
     source_url: target.src.slice(0, 100) || target.href.slice(0, 100),

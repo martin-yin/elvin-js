@@ -1,2 +1,3 @@
 import { init, setupReplace } from './browser'
-export { init, setupReplace }
+import { RportVue } from "./vue"
+export { init, setupReplace, RportVue }

@@ -21,13 +21,12 @@ export function setupReplace(): void {
     },
     type: EVENTTYPES.FETCH
   })
-  // addReplaceHandler({
-  //   callback: (error) => {
-  //     console.log(error, "error!!!!!!!!");
-  //     HandleEvents.handleError(error);
-  //   },
-  //   type: EVENTTYPES.ERROR,
-  // });
+  addReplaceHandler({
+    callback: (error) => {
+      HandleEvents.handleError(error);
+    },
+    type: EVENTTYPES.ERROR,
+  });
   addReplaceHandler({
     callback: (data) => {
       HandleEvents.handleHistory(data)

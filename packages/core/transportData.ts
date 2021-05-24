@@ -6,16 +6,18 @@ import { isBrowserEnv, _support } from './global'
 
 export class TransportData {
   queue: Queue
-  monitorId = ''
-  userId = ''
-  eventId = ''
+  monitorId: string;
+  userId: string;
+  eventId: string;
   constructor(public url: string) {
     this.queue = new Queue()
   }
 
   bindOptions(options: InitOptions): void {
-    const { monitorId } = options
+    const { monitorId, userId, eventId } = options
     this.monitorId = monitorId
+    this.userId = userId;
+    this.eventId = eventId;
   }
 
   async xhrPost(data) {
