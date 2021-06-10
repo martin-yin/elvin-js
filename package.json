@@ -3,15 +3,24 @@
   "version": "0.0.1",
   "description": "",
   "main": "./lib/index.js",
-  "module": "lib/index.esm.js",
+  "module": "./es/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "format": "prettier --write packages/**/*.{ts,js}",
     "tsc": "tsc --watch",
     "build": "set NODE_ENV=production&& rollup -c rollup.config.js"
   },
-  "author": "",
+  "author": "diaosiwei",
+  "homepage": "https://github.com/galaxy-softwares/elvin-js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/galaxy-softwares/elvin-js"
+  },
   "license": "ISC",
+  "files": [
+    "lib",
+    "es"
+  ],
   "dependencies": {
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@types/node": "^15.3.1",
