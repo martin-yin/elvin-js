@@ -1,6 +1,6 @@
 import path from "path";
-import commonjs from "rollup-plugin-commonjs"; // commonjs模块转换插件
-import ts from "rollup-plugin-typescript2";
+import commonjs from "@rollup/plugin-commonjs";
+import typescript2 from "rollup-plugin-typescript2";
 import { uglify } from "rollup-plugin-uglify";
 import filesize from "rollup-plugin-filesize";
 import progress from "rollup-plugin-progress";
@@ -10,7 +10,7 @@ import { minify } from "uglify-js";
 import resolve from "@rollup/plugin-node-resolve";
 
 // ts
-const tsPlugin = ts({
+const tsPlugin = typescript2({
   tsconfig: getPath("./tsconfig.json"), // 导入本地ts配置
 });
 
@@ -20,7 +20,9 @@ const commonConf = {
   plugins: [
     resolve(),
     tsPlugin,
-    commonjs(),
+    commonjs({
+      exclude: 'node_modules'
+    }),
     uglify({}, minify),
     progress(),
     filesize({

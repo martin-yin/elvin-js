@@ -4,7 +4,7 @@
   "description": "",
   "main": "./lib/index.js",
   "module": "./es/index.js",
-  "types": "lib/index.d.ts",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "format": "prettier --write packages/**/*.{ts,js}",
     "tsc": "tsc --watch",
@@ -22,6 +22,7 @@
     "es"
   ],
   "dependencies": {
+    "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@types/node": "^15.3.1",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
@@ -29,7 +30,6 @@
     "error-stack-parser": "^2.0.6",
     "prettier": "^2.3.0",
     "rollup": "^2.48.0",
-    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-filesize": "^9.1.1",
     "rollup-plugin-progress": "^1.1.2",
     "rollup-plugin-typescript2": "^0.30.0",

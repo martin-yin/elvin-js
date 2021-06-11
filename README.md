@@ -1,6 +1,6 @@
 # Elvin-Js
 
-名称来源一位朋友网民 "艾文"
+名称来源一位网友 "艾文"
 
 基于mitojs魔改, 用于"自建前端监控", 代码已全部开源。
 
@@ -16,4 +16,15 @@
 
 ## 使用
 
-直接拷贝进项目……还未发npm包……
+Vue2 NPM包形式使用
+
+```js
+
+npm install elvin-js
+
+import { init, RportVue } from 'elvin-js'
+
+init({
+  monitorId: 'monitor_id1623225668'  // 创建项目时自动分配
+})
+```

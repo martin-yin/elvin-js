@@ -85,7 +85,6 @@ const RportVue = {
             vm: any,
             info: string
         ): void {
-            console.log(111);
             handleVueError.apply(null, [err, vm, info, Vue]);
             if (hasConsole && !Vue.config.silent) {
                 slientConsoleScope(() => {
