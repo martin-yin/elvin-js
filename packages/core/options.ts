@@ -1,5 +1,4 @@
 import { InitOptions } from '../types/options'
-// import { generateUUID } from '../utils/helpers'
 import { _support } from './global'
 import { transportData } from './transportData'
 export class Options {

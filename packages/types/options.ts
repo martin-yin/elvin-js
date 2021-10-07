@@ -8,8 +8,6 @@ export enum EMethods {
 }
 
 export interface InitOptions {
-  userId?: string
-  eventId?: string
   monitorId: string
   reportUrl?: string
   disabled?: boolean

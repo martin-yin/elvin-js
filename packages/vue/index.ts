@@ -7,7 +7,8 @@ import {
     slientConsoleScope,
 } from "../utils/helpers";
 import { variableTypeDetection } from "../utils/is";
-const ErrorStackParser = require('error-stack-parser')
+
+import ErrorStackParser from 'error-stack-parser'
 
 const hasConsole = typeof console !== "undefined";
 
