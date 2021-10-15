@@ -4,13 +4,8 @@ import { transportData } from '../core/transportData'
 import { EVENTTYPES, HTTPTYPE, voidFun } from '../shared'
 import { REPORTXMLHttpRequest } from '../types/common'
 import { EMethods } from '../types/options'
-
 import { getLocationHref, getTimestamp, getYMDHMS, on, replaceOld } from '../utils/helpers'
 import { isExistProperty, variableTypeDetection } from '../utils/is'
-
-// function isFilterHttpUrl(url: string) {
-//   return options.filterXhrUrlRegExp && options.filterXhrUrlRegExp.test(url)
-// }
 
 function replace(type: EVENTTYPES) {
   switch (type) {
@@ -39,7 +34,7 @@ function replace(type: EVENTTYPES) {
       listenHashchange()
       break
     case EVENTTYPES.PERFORMANCE:
-      PerformanceReplace()
+      performanceReplace()
       break
     default:
       break
@@ -65,16 +60,13 @@ function xhrReplace(): void {
         url: args[1],
         type: HTTPTYPE.XHR,
         load_time: 0,
-        http_url: args[1],
+        http_url: args[1].split("?")[0] ? args[1].split("?")[0] : args[1],
         status: 0,
         status_text: '',
         happen_day: getYMDHMS(),
-        start_time: getTimestamp(),
-        action_type: 'HTTP_LOG',
-        page_url: getLocationHref(),
+        sub_type: 'HTTP_LOG',
         response_text: '',
-        request_text: '',
-        req_data: ''
+        request_text: args[1].split("?")[1],
       }
       originalOpen.apply(this, args)
     }
@@ -82,14 +74,11 @@ function xhrReplace(): void {
   replaceOld(originalXhrProto, 'send', (originalSend: voidFun): voidFun => {
     return function (this: REPORTXMLHttpRequest, ...args: any[]): void {
       const { method, url } = this.report_xhr
+      this.startTime = getTimestamp()
       on(this, 'loadend', function (this: REPORTXMLHttpRequest) {
-        // || isFilterHttpUrl(url)
         if ((method === EMethods.Post && transportData.isSdkTransportUrl(url)))
-          // 这里仅用于开发测试
           return
-
         const { responseType, response, status, statusText } = this
-        this.report_xhr.request_text = args[0]
         const eTime = getTimestamp()
         this.report_xhr.status = status
         if (['', 'json', 'text'].indexOf(responseType) !== -1) {
@@ -97,7 +86,7 @@ function xhrReplace(): void {
         }
         this.report_xhr.status_text = statusText
         this.report_xhr.happen_time = getTimestamp()
-        this.report_xhr.load_time = eTime - this.report_xhr.start_time
+        this.report_xhr.load_time = eTime - this.start_time
         triggerHandlers(EVENTTYPES.XHR, this.report_xhr)
       })
       originalSend.apply(this, args)
@@ -249,9 +238,8 @@ function domReplace(): void {
     true
   )
 }
-function PerformanceReplace(): void {
+function performanceReplace(): void {
   on(_global, 'load', function () {
-    const performance = window.performance.getEntriesByType('navigation')[0]
     triggerHandlers(EVENTTYPES.PERFORMANCE, performance)
   })
 }

@@ -21,13 +21,11 @@ export function handleVueError(err: Error, vm, info: string, Vue): void {
     const stack = parseStackTrack(err);
     let data = {
         message: `${err.message}(${info})`,
-        page_url: getLocationHref(),
         stack: err.stack,
         stack_frames: JSON.stringify(stack) || "",
         happen_time: getTimestamp(),
-        happen_day: getYMDHMS(),
         error_name: err.name,
-        action_type: "JS_ERROR",
+        sub_type: "JS_ERROR",
     };
 
     if (variableTypeDetection.isString(version)) {

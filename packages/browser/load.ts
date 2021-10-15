@@ -5,7 +5,7 @@ import { addReplaceHandler } from './replace'
 export function setupReplace(): void {
   addReplaceHandler({
     callback: (e: any) => {
-      HandleEvents.PerformanceReplace(e)
+      HandleEvents.performanceReplace(e)
     },
     type: EVENTTYPES.PERFORMANCE
   })

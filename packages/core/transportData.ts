@@ -3,7 +3,8 @@ import { Queue } from '../utils/queue'
 import { getUaResult } from '../utils/uaParser'
 import { EMethods, InitOptions } from '../types/options'
 import { isBrowserEnv, _support } from './global'
-import { getUserIdInCookie, uuid } from 'packages/utils/helpers'
+import { getLocationHref, getUserIdInCookie, getYMDHMS, uuid } from '../utils/helpers'
+
 
 export class TransportData {
   queue: Queue
@@ -27,7 +28,7 @@ export class TransportData {
     data = this.getTransportData(data)
     const requestFun = (): void => {
       const xhr = new XMLHttpRequest()
-      xhr.open(EMethods.Post, `${this.reportUrl}?action_type=${data.action_type}&monitor_id=${data.monitor_id}&session_id=${this.getSessionId()}`)
+      xhr.open(EMethods.Post, `${this.reportUrl}?sub_type=${data.sub_type}&monitor_id=${data.monitor_id}&session_id=${this.getSessionId()}`)
       xhr.setRequestHeader('Content-Type', 'application/json')
       xhr.withCredentials = true
       xhr.send(JSON.stringify(data))
@@ -47,15 +48,16 @@ export class TransportData {
     return this.sessionId
   }
 
-
   getTransportData(data) {
     const uaParser = getUaResult()
     return {
       ...data,
+      ...uaParser,
       user_id: this.getUserId(),
       monitor_id: this.getMonitorId(),
       session_id: this.getSessionId(),
-      ...uaParser
+      page_url: getLocationHref(),
+      happen_day: getYMDHMS()
     }
   }
   isSdkTransportUrl(targetUrl: string): boolean {
