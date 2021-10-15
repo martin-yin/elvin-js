@@ -54,7 +54,6 @@ function xhrReplace(): void {
   replaceOld(originalXhrProto, 'open', (originalOpen: voidFun): voidFun => {
     return function (this: REPORTXMLHttpRequest, ...args: any[]): void {
       const method = variableTypeDetection.isString(args[0]) ? args[0].toUpperCase() : args[0]
-
       this.report_xhr = {
         method,
         url: args[1],
@@ -64,7 +63,7 @@ function xhrReplace(): void {
         status: 0,
         status_text: '',
         happen_day: getYMDHMS(),
-        sub_type: 'HTTP_LOG',
+        action_type: 'HTTP_LOG',
         response_text: '',
         request_text: args[1].split("?")[1],
       }
@@ -86,7 +85,7 @@ function xhrReplace(): void {
         }
         this.report_xhr.status_text = statusText
         this.report_xhr.happen_time = getTimestamp()
-        this.report_xhr.load_time = eTime - this.start_time
+        this.report_xhr.load_time = eTime - this.startTime
         triggerHandlers(EVENTTYPES.XHR, this.report_xhr)
       })
       originalSend.apply(this, args)
@@ -240,6 +239,7 @@ function domReplace(): void {
 }
 function performanceReplace(): void {
   on(_global, 'load', function () {
+    const performance = window.performance.getEntriesByType('navigation')[0]
     triggerHandlers(EVENTTYPES.PERFORMANCE, performance)
   })
 }

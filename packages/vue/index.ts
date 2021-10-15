@@ -25,7 +25,7 @@ export function handleVueError(err: Error, vm, info: string, Vue): void {
         stack_frames: JSON.stringify(stack) || "",
         happen_time: getTimestamp(),
         error_name: err.name,
-        sub_type: "JS_ERROR",
+        action_type: "JS_ERROR",
     };
 
     if (variableTypeDetection.isString(version)) {

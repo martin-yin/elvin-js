@@ -8,18 +8,17 @@ const resourceMap = {
 
 export function resourceTransform(target: ResourceErrorTarget) {
   return {
-    sub_type: 'RESOURCE',
+    action_type: 'RESOURCE',
     happen_time: getTimestamp(),
     source_url: target.src.slice(0, 100) || target.href.slice(0, 100),
     element_type: resourceMap[target.localName] || target.localName,
-    status: ''
   }
 }
 
 export function rerformanceTransform(performance) {
   return {
     load_type: performance.type,
-    sub_type: 'PAGE_LOAD',
+    action_type: 'PAGE_LOAD',
     redirect: transformNumber(performance.redirectEnd - performance.redirectStart),
     appcache: transformNumber(performance.domainLookupStart - performance.fetchStart),
     lookup_domain: transformNumber(performance.domainLookupEnd - performance.domainLookupStart),

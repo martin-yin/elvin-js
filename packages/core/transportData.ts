@@ -28,7 +28,7 @@ export class TransportData {
     data = this.getTransportData(data)
     const requestFun = (): void => {
       const xhr = new XMLHttpRequest()
-      xhr.open(EMethods.Post, `${this.reportUrl}?sub_type=${data.sub_type}&monitor_id=${data.monitor_id}&session_id=${this.getSessionId()}`)
+      xhr.open(EMethods.Post, `${this.reportUrl}?action_type=${data.action_type}&monitor_id=${data.monitor_id}&session_id=${this.getSessionId()}`)
       xhr.setRequestHeader('Content-Type', 'application/json')
       xhr.withCredentials = true
       xhr.send(JSON.stringify(data))
