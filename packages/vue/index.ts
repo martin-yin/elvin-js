@@ -1,9 +1,7 @@
 import { transportData } from "../core/transportData";
 import {
     getBigVersion,
-    getLocationHref,
     getTimestamp,
-    getYMDHMS,
     slientConsoleScope,
 } from "../utils/helpers";
 import { variableTypeDetection } from "../utils/is";
