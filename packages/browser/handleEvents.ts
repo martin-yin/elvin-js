@@ -1,7 +1,7 @@
 import { ResourceErrorTarget } from '../types/common'
 import { transportData } from '../core/transportData'
 import { getTimestamp } from '../utils/helpers'
-import { rerformanceTransform, resourceTransform } from '../core/transformData'
+import { jsErrorTransform, rerformanceTransform, resourceTransform } from '../core/transformData'
 
 const HandleEvents = {
   handleDomOperation(event) {
@@ -33,6 +33,8 @@ const HandleEvents = {
       const data = resourceTransform(errorEvent.target as ResourceErrorTarget)
       return transportData.send(data)
     }
+    const data = jsErrorTransform(target as ErrorEvent)
+    transportData.send(data)
   },
   handleHistory(data: any): void {
     const history = {

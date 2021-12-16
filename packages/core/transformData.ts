@@ -15,6 +15,18 @@ export function resourceTransform(target: ResourceErrorTarget) {
   }
 }
 
+export function jsErrorTransform(target: ErrorEvent){
+  return {
+    action_type: 'JS_ERROR',
+    message: `${target.message}`,
+    stack: target.error.stack,
+    stack_frames: JSON.stringify(target.error.stack) || "",
+    happen_time: getTimestamp(),
+    error_name: target.type,
+    component_name: target.filename
+  }
+} 
+
 export function rerformanceTransform(performance) {
   return {
     load_type: performance.type,
