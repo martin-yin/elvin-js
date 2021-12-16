@@ -161,12 +161,6 @@ export function getYMDHMS() {
   return `${year}-${month}-${date}`
 }
 
-export function slientConsoleScope(callback: Function) {
-  //   globalVar.isLogAddBreadcrumb = false;
-  //   callback();
-  //   globalVar.isLogAddBreadcrumb = true;
-}
-
 // export function generateUUID(): string {
 //   let d = new Date().getTime()
 //   const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -178,82 +172,85 @@ export function slientConsoleScope(callback: Function) {
 // }
 
 export function getUserIdInCookie(fallbackId) {
-  var id = fallbackId;
+  var id = fallbackId
   try {
-    id = getValueFromCookieName(document.cookie, "RANGERS_WEB_ID");
+    id = getValueFromCookieName(document.cookie, 'RANGERS_WEB_ID')
     if (id == '') {
-      const expire = new Date((new Date()).getTime() + 24 * 3600000);
+      const expire = new Date(new Date().getTime() + 24 * 3600000)
       document.cookie = `RANGERS_WEB_ID=${fallbackId};expires=${expire}`
     }
-  }
-  catch (_e) {
+  } catch (_e) {
     // do nothing
   }
-  return id || fallbackId;
-};
+  return id || fallbackId
+}
 
 export function getValueFromCookieName(cookie, name) {
-  var e_1, _a;
+  var e_1, _a
   if (!cookie || !name) {
-    return '';
+    return ''
   }
-  var list = cookie.split(';');
-  var cookieObj = {};
+  var list = cookie.split(';')
+  var cookieObj = {}
   try {
     for (var list_1 = __values(list), list_1_1 = list_1.next(); !list_1_1.done; list_1_1 = list_1.next()) {
-      var item = list_1_1.value;
-      var pair = item.split('=');
-      var cookieKey = isString(pair[0]) && pair[0].trim();
+      var item = list_1_1.value
+      var pair = item.split('=')
+      var cookieKey = isString(pair[0]) && pair[0].trim()
       if (cookieKey && isString(pair[1])) {
-        cookieObj[cookieKey] = pair[1].trim();
+        cookieObj[cookieKey] = pair[1].trim()
       }
     }
-  }
-  catch (e_1_1) { e_1 = { error: e_1_1 }; }
-  finally {
+  } catch (e_1_1) {
+    e_1 = { error: e_1_1 }
+  } finally {
     try {
-      if (list_1_1 && !list_1_1.done && (_a = list_1.return)) _a.call(list_1);
+      if (list_1_1 && !list_1_1.done && (_a = list_1.return)) _a.call(list_1)
+    } finally {
+      if (e_1) throw e_1.error
     }
-    finally { if (e_1) throw e_1.error; }
   }
-  return cookieObj[name] || '';
+  return cookieObj[name] || ''
 }
 
 function isString(what) {
-  return Object.prototype.toString.call(what) === '[object String]';
+  return Object.prototype.toString.call(what) === '[object String]'
 }
 
 function __values(o) {
-  var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-  if (m) return m.call(o);
-  if (o && typeof o.length === "number") return {
-    next: function () {
-      if (o && i >= o.length) o = void 0;
-      return { value: o && o[i++], done: !o };
+  var s = typeof Symbol === 'function' && Symbol.iterator,
+    m = s && o[s],
+    i = 0
+  if (m) return m.call(o)
+  if (o && typeof o.length === 'number')
+    return {
+      next: function () {
+        if (o && i >= o.length) o = void 0
+        return { value: o && o[i++], done: !o }
+      }
     }
-  };
-  throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+  throw new TypeError(s ? 'Object is not iterable.' : 'Symbol.iterator is not defined.')
 }
 
 export function mathRNG() {
-  var rnds = new Array(16);
-  var r = 0;
+  var rnds = new Array(16)
+  var r = 0
   for (var i = 0; i < 16; i++) {
     if ((i & 0x03) === 0) {
-      r = Math.random() * 0x100000000;
+      r = Math.random() * 0x100000000
     }
-    rnds[i] = (r >>> ((i & 0x03) << 3)) & 0xff;
+    rnds[i] = (r >>> ((i & 0x03) << 3)) & 0xff
   }
-  return rnds;
+  return rnds
 }
 
 function bytesToUuid(buf) {
-  var byteToHex = [];
+  var byteToHex = []
   for (var index = 0; index < 256; ++index) {
-    byteToHex[index] = (index + 0x100).toString(16).substr(1);
+    byteToHex[index] = (index + 0x100).toString(16).substr(1)
   }
-  var i = 0;
-  var bth = byteToHex;
+  var i = 0
+  var bth = byteToHex
   // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
   return [
     bth[buf[i++]],
@@ -275,15 +272,15 @@ function bytesToUuid(buf) {
     bth[buf[i++]],
     bth[buf[i++]],
     bth[buf[i++]],
-    bth[buf[i++]],
-  ].join('');
+    bth[buf[i++]]
+  ].join('')
 }
 export function uuid() {
-  var rnds = mathRNG();
+  var rnds = mathRNG()
   // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-  rnds[6] = (rnds[6] & 0x0f) | 0x40;
-  rnds[8] = (rnds[8] & 0x3f) | 0x80;
-  return bytesToUuid(rnds);
+  rnds[6] = (rnds[6] & 0x0f) | 0x40
+  rnds[8] = (rnds[8] & 0x3f) | 0x80
+  return bytesToUuid(rnds)
 }
 
 export function unknownToString(target: unknown): string {

@@ -5,13 +5,12 @@ import { EMethods, InitOptions } from '../types/options'
 import { isBrowserEnv, _support } from './global'
 import { getLocationHref, getUserIdInCookie, getYMDHMS, uuid } from '../utils/helpers'
 
-
 export class TransportData {
   queue: Queue
-  monitorId: string;
-  userId: string;
-  sessionId: string;
-  reportUrl: string;
+  monitorId: string
+  userId: string
+  sessionId: string
+  reportUrl: string
   constructor() {
     this.queue = new Queue()
   }
@@ -19,16 +18,19 @@ export class TransportData {
   bindOptions(options: InitOptions): void {
     const { monitorId, reportUrl } = options
     this.monitorId = monitorId
-    this.reportUrl = reportUrl ? reportUrl : SERVER_URL;
-    this.userId = getUserIdInCookie(uuid());
-    this.sessionId = uuid();
+    this.reportUrl = reportUrl ? reportUrl : SERVER_URL
+    this.userId = getUserIdInCookie(uuid())
+    this.sessionId = uuid()
   }
 
   async xhrPost(data) {
     data = this.getTransportData(data)
     const requestFun = (): void => {
       const xhr = new XMLHttpRequest()
-      xhr.open(EMethods.Post, `${this.reportUrl}?action_type=${data.action_type}&monitor_id=${data.monitor_id}&session_id=${this.getSessionId()}`)
+      xhr.open(
+        EMethods.Post,
+        `${this.reportUrl}?action_type=${data.action_type}&monitor_id=${data.monitor_id}&session_id=${this.getSessionId()}`
+      )
       xhr.setRequestHeader('Content-Type', 'application/json')
       xhr.withCredentials = true
       xhr.send(JSON.stringify(data))

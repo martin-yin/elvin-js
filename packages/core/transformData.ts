@@ -1,5 +1,6 @@
 import { ResourceErrorTarget } from '../types/common'
 import { getTimestamp } from '../utils/helpers'
+import ErrorStackParser from 'error-stack-parser'
 
 const resourceMap = {
   img: '图片',
@@ -11,21 +12,22 @@ export function resourceTransform(target: ResourceErrorTarget) {
     action_type: 'RESOURCE',
     happen_time: getTimestamp(),
     source_url: target.src.slice(0, 100) || target.href.slice(0, 100),
-    element_type: resourceMap[target.localName] || target.localName,
+    element_type: resourceMap[target.localName] || target.localName
   }
 }
 
-export function jsErrorTransform(target: ErrorEvent){
+export function jsErrorTransform(target: ErrorEvent) {
+  const stacks = ErrorStackParser.parse(target.error)
   return {
     action_type: 'JS_ERROR',
     message: `${target.message}`,
     stack: target.error.stack,
-    stack_frames: JSON.stringify(target.error.stack) || "",
+    stack_frames: JSON.stringify(stacks) || '',
     happen_time: getTimestamp(),
     error_name: target.type,
     component_name: target.filename
   }
-} 
+}
 
 export function rerformanceTransform(performance) {
   return {
@@ -44,7 +46,7 @@ export function rerformanceTransform(performance) {
     load_page: performance.loadEventEnd == 0 ? 0 : transformNumber(performance.loadEventEnd - performance.fetchStart),
     // load event 时间
     load_event: performance.loadEventEnd == 0 ? 0 : transformNumber(performance.loadEventEnd - performance.loadEventStart),
-    happen_time: parseInt(localStorage.getItem('performance_happen_time')),
+    happen_time: parseInt(localStorage.getItem('performance_happen_time'))
   }
 }
 

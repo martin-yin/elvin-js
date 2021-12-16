@@ -22,12 +22,17 @@
     "es"
   ],
   "dependencies": {
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@types/node": "^15.3.1",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
     "error-stack-parser": "^2.0.6",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.3.0",
     "rollup": "^2.48.0",
     "rollup-plugin-filesize": "^9.1.1",
@@ -36,6 +41,25 @@
     "rollup-plugin-uglify": "^6.0.4",
     "typescript": "^4.2.4",
     "ua-parser-js": "^0.7.28",
-    "uglify-js": "^3.13.7"
+    "uglify-js": "^3.13.7",
+    "husky": "^4.3.8",
+    "lint-staged": "^11.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "packages/**/*.{ts,tsx,js}": [
+      "prettier --write .",
+      "git add ."
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }

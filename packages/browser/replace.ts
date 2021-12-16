@@ -59,13 +59,13 @@ function xhrReplace(): void {
         url: args[1],
         type: HTTPTYPE.XHR,
         load_time: 0,
-        http_url: args[1].split("?")[0] ? args[1].split("?")[0] : args[1],
+        http_url: args[1].split('?')[0] ? args[1].split('?')[0] : args[1],
         status: 0,
         status_text: '',
         happen_day: getYMDHMS(),
         action_type: 'HTTP_LOG',
         response_text: '',
-        request_text: args[1].split("?")[1],
+        request_text: args[1].split('?')[1]
       }
       originalOpen.apply(this, args)
     }
@@ -75,8 +75,7 @@ function xhrReplace(): void {
       const { method, url } = this.report_xhr
       this.startTime = getTimestamp()
       on(this, 'loadend', function (this: REPORTXMLHttpRequest) {
-        if ((method === EMethods.Post && transportData.isSdkTransportUrl(url)))
-          return
+        if (method === EMethods.Post && transportData.isSdkTransportUrl(url)) return
         const { responseType, response, status, statusText } = this
         const eTime = getTimestamp()
         this.report_xhr.status = status

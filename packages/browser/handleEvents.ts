@@ -13,7 +13,7 @@ const HandleEvents = {
       input_value: event.target.inputValue,
       placeholder: event.target.placeholder,
       action_type: 'OPERATION',
-      happen_time: getTimestamp(),
+      happen_time: getTimestamp()
     }
     transportData.send(data)
   },
@@ -40,7 +40,7 @@ const HandleEvents = {
     const history = {
       page_url: data.to,
       action_type: 'PAGE_VIEW',
-      happen_time: getTimestamp(),
+      happen_time: getTimestamp()
     }
     transportData.send(history)
   },
@@ -48,12 +48,12 @@ const HandleEvents = {
     const history = {
       page_url: data.newURL,
       action_type: 'PAGE_VIEW',
-      happen_time: getTimestamp(),
+      happen_time: getTimestamp()
     }
     transportData.send(history)
   },
   handleUnhandleRejection(event: PromiseRejectionEvent): void {
-    console.log(event, "ev");
+    console.log(event, 'ev')
   },
   performanceReplace(data): void {
     // 这里是用微任务延迟下，不然的话 loadEventEnd 一些会为0

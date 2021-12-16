@@ -23,10 +23,10 @@ export function setupReplace(): void {
   })
   addReplaceHandler({
     callback: (error) => {
-      HandleEvents.handleError(error);
+      HandleEvents.handleError(error)
     },
-    type: EVENTTYPES.ERROR,
-  });
+    type: EVENTTYPES.ERROR
+  })
   addReplaceHandler({
     callback: (data) => {
       HandleEvents.handleHistory(data)
@@ -43,8 +43,8 @@ export function setupReplace(): void {
     callback: (data) => {
       HandleEvents.handleDomOperation(data)
     },
-    type: EVENTTYPES.DOM,
-  });
+    type: EVENTTYPES.DOM
+  })
   addReplaceHandler({
     callback: (e: HashChangeEvent) => {
       HandleEvents.handleHashchange(e)
