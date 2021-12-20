@@ -18,13 +18,14 @@ export function resourceTransform(target: ResourceErrorTarget) {
 
 export function jsErrorTransform(target: ErrorEvent) {
   const stacks = ErrorStackParser.parse(target.error)
+  const error_name = target.error.stack.split(':')[0]
   return {
     action_type: 'JS_ERROR',
-    message: `${target.message}`,
+    message: `${target.error.message}`,
     stack: target.error.stack,
     stack_frames: JSON.stringify(stacks) || '',
     happen_time: getTimestamp(),
-    error_name: target.type,
+    error_name,
     component_name: target.filename
   }
 }

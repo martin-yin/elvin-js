@@ -7,7 +7,7 @@ export function handleVueError(err: Error, vm, info: string, Vue): void {
   const version = Vue.version
   const stack = ErrorStackParser.parse(err)
   let data = {
-    message: `${err.message}(${info})`,
+    message: `${err.message}`,
     stack: err.stack,
     stack_frames: JSON.stringify(stack) || '',
     happen_time: getTimestamp(),
