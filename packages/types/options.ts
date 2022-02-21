@@ -10,5 +10,7 @@ export enum EMethods {
 export interface InitOptions {
   monitorId: string
   reportUrl?: string
+  userId?: string
+  sessionId?: string
   disabled?: boolean
 }

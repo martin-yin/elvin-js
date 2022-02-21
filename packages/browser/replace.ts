@@ -1,10 +1,11 @@
+import { fromHttpStatus } from 'packages/utils/httpStatus'
 import { supportsHistory, _global } from '../core/global'
 import { ReplaceHandler, subscribeEvent, triggerHandlers } from '../core/subscribe'
 import { transportData } from '../core/transportData'
 import { EVENTTYPES, HTTPTYPE, voidFun } from '../shared'
 import { REPORTXMLHttpRequest } from '../types/common'
 import { EMethods } from '../types/options'
-import { getLocationHref, getTimestamp, getYMDHMS, on, replaceOld } from '../utils/helpers'
+import { getLocationHref, getTimestamp, getYMDHMS, isHttpFail, on, replaceOld } from '../utils/helpers'
 import { isExistProperty, variableTypeDetection } from '../utils/is'
 
 function replace(type: EVENTTYPES) {
@@ -82,7 +83,7 @@ function xhrReplace(): void {
         if (['', 'json', 'text'].indexOf(responseType) !== -1) {
           this.report_xhr.response_text = typeof response === 'object' ? JSON.stringify(response) : response
         }
-        this.report_xhr.status_text = statusText
+        this.report_xhr.status_text = isHttpFail(status) ? 'fail' : fromHttpStatus(status)
         this.report_xhr.happen_time = getTimestamp()
         this.report_xhr.load_time = eTime - this.startTime
         triggerHandlers(EVENTTYPES.XHR, this.report_xhr)

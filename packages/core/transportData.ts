@@ -1,9 +1,9 @@
 import { SERVER_URL } from '../shared'
 import { Queue } from '../utils/queue'
-import { getUaResult } from '../utils/uaParser'
+import { getCommon } from '../utils/uaParser'
 import { EMethods, InitOptions } from '../types/options'
 import { isBrowserEnv, _support } from './global'
-import { getLocationHref, getUserIdInCookie, getYMDHMS, uuid } from '../utils/helpers'
+import { getLocationHref, getYMDHMS, getUid, getSid } from '../utils/helpers'
 
 export class TransportData {
   queue: Queue
@@ -16,11 +16,11 @@ export class TransportData {
   }
 
   bindOptions(options: InitOptions): void {
-    const { monitorId, reportUrl } = options
+    const { monitorId, reportUrl, userId, sessionId } = options
     this.monitorId = monitorId
     this.reportUrl = reportUrl ? reportUrl : SERVER_URL
-    this.userId = getUserIdInCookie(uuid())
-    this.sessionId = uuid()
+    this.userId = userId ? userId : getUid()
+    this.sessionId = sessionId ? sessionId : getSid()
   }
 
   async xhrPost(data) {
@@ -51,10 +51,9 @@ export class TransportData {
   }
 
   getTransportData(data) {
-    const uaParser = getUaResult()
     return {
       ...data,
-      ...uaParser,
+      ...getCommon(),
       user_id: this.getUserId(),
       monitor_id: this.getMonitorId(),
       session_id: this.getSessionId(),

@@ -41,7 +41,7 @@ export function setupReplace(): void {
   })
   addReplaceHandler({
     callback: (data) => {
-      HandleEvents.handleDomOperation(data)
+      // HandleEvents.handleDomOperation(data)
     },
     type: EVENTTYPES.DOM
   })

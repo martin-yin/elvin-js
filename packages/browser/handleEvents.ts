@@ -1,22 +1,22 @@
 import { ResourceErrorTarget } from '../types/common'
 import { transportData } from '../core/transportData'
 import { getTimestamp } from '../utils/helpers'
-import { jsErrorTransform, rerformanceTransform, resourceTransform } from '../core/transformData'
+import { errorTransform, performanceTransform, resourceTransform } from '../core/transformData'
 
 const HandleEvents = {
-  handleDomOperation(event) {
-    const data = {
-      class_name: event.target.className,
-      inner_text: event.target.innerText,
-      tag_name: event.target.tagName,
-      behavior_type: event.type,
-      input_value: event.target.inputValue,
-      placeholder: event.target.placeholder,
-      action_type: 'OPERATION',
-      happen_time: getTimestamp()
-    }
-    transportData.send(data)
-  },
+  // handleDomOperation(event) {
+  //   const data = {
+  //     class_name: event.target.className,
+  //     inner_text: event.target.innerText,
+  //     tag_name: event.target.tagName,
+  //     behavior_type: event.type,
+  //     input_value: event.target.inputValue,
+  //     placeholder: event.target.placeholder,
+  //     action_type: 'OPERATION',
+  //     happen_time: getTimestamp()
+  //   }
+  //   transportData.send(data)
+  // },
   /**
    * 处理xhr、fetch回调
    */
@@ -33,34 +33,35 @@ const HandleEvents = {
       const data = resourceTransform(errorEvent.target as ResourceErrorTarget)
       return transportData.send(data)
     }
-    const data = jsErrorTransform(target as ErrorEvent)
+    const data = errorTransform(target as ErrorEvent)
     transportData.send(data)
   },
   handleHistory(data: any): void {
-    const history = {
-      page_url: data.to,
-      action_type: 'PAGE_VIEW',
-      happen_time: getTimestamp()
-    }
-    transportData.send(history)
+    HandleEvents.handlePv(data)
   },
   handleHashchange(data: HashChangeEvent): void {
-    const history = {
-      page_url: data.newURL,
-      action_type: 'PAGE_VIEW',
-      happen_time: getTimestamp()
-    }
-    transportData.send(history)
+    HandleEvents.handlePv(data)
   },
   handleUnhandleRejection(event: PromiseRejectionEvent): void {
     console.log(event, 'ev')
   },
-  performanceReplace(data): void {
-    // 这里是用微任务延迟下，不然的话 loadEventEnd 一些会为0
-    setTimeout(() => {
-      const performance = rerformanceTransform(data)
-      transportData.send(performance)
+  handlePerformance(): void {
+    const performance = window.performance
+    if (!performance || 'object' !== typeof performance) return
+    performanceTransform((data) => {
+      transportData.send(data)
     })
+  },
+  handlePv(data: HashChangeEvent): void {
+    const history = {
+      page_url: data.newURL,
+      action_type: 'PAGE_VIEW',
+      document_title: document.title,
+      referrer: data.oldURL,
+      encode: document.charset,
+      happen_time: getTimestamp()
+    }
+    transportData.send(history)
   }
 }
 

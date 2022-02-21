@@ -1,7 +1,7 @@
 import { HTTP_CODE } from '../shared'
 import { IAnyObject } from '../types/common'
 import { nativeToString, variableTypeDetection } from './is'
-import ErrorStackParser, { StackFrame } from 'error-stack-parser'
+import ErrorStackParser from 'error-stack-parser'
 
 export function getLocationHref(): string {
   if (typeof document === 'undefined' || document.location == null) return ''
@@ -61,6 +61,19 @@ export function replaceOld(source: IAnyObject, name: string, replacement: (...ar
 //     return result
 //   }, '')
 // }
+
+export function each(data, fn) {
+  let n = 0
+  const r = data.length
+  if (isTypeOf(data, 'Array')) for (; n < r && !1 !== fn.call(data[n], data[n], n); n++);
+  else for (const m in data) if (!1 === fn.call(data[m], data[m], m)) break
+  return data
+}
+
+export function isTypeOf(data, type = null) {
+  const n = Object.prototype.toString.call(data).substring(8).replace(']', '')
+  return type ? n === type : n
+}
 
 export const defaultFunctionName = '<anonymous>'
 /**
@@ -135,21 +148,13 @@ export function toStringAny(target: any, type: string): boolean {
 
 export function validateOption(target: any, targetName: string, expectType: string): boolean {
   if (typeofAny(target, expectType)) return true
-  // typeof target !== "undefined" &&
-  //     logger.error(
-  //         `${targetName}期望传入${expectType}类型，目前是${typeof target}类型`
-  //     );
+  typeof target !== 'undefined' && console.error(`${targetName}期望传入${expectType}类型，目前是${typeof target}类型`)
   return false
 }
 
 export function toStringValidateOption(target: any, targetName: string, expectType: string): boolean {
   if (toStringAny(target, expectType)) return true
-  // typeof target !== "undefined" &&
-  // logger.error(
-  //     `${targetName}期望传入${expectType}类型，目前是${nativeToString.call(
-  //         target
-  //     )}类型`
-  // );
+  typeof target !== 'undefined' && console.error(`${targetName}期望传入${expectType}类型，目前是${nativeToString.call(target)}类型`)
   return false
 }
 
@@ -161,136 +166,32 @@ export function getYMDHMS() {
   return `${year}-${month}-${date}`
 }
 
-// export function generateUUID(): string {
-//   let d = new Date().getTime()
-//   const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-//     const r = (d + Math.random() * 16) % 16 | 0
-//     d = Math.floor(d / 16)
-//     return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16)
-//   })
-//   return uuid
-// }
-
-export function getUserIdInCookie(fallbackId) {
-  var id = fallbackId
-  try {
-    id = getValueFromCookieName(document.cookie, 'RANGERS_WEB_ID')
-    if (id == '') {
-      const expire = new Date(new Date().getTime() + 24 * 3600000)
-      document.cookie = `RANGERS_WEB_ID=${fallbackId};expires=${expire}`
-    }
-  } catch (_e) {
-    // do nothing
+export function getUid(): string {
+  let uid = localStorage.getItem('elvin_user_id') || ''
+  if (!uid) {
+    uid = generateUUID()
+    localStorage.setItem('elvin_user_id', uid)
   }
-  return id || fallbackId
+  return uid
 }
 
-export function getValueFromCookieName(cookie, name) {
-  var e_1, _a
-  if (!cookie || !name) {
-    return ''
+export function getSid() {
+  let sid = sessionStorage.getItem('elvin_session_id') || ''
+  if (!sid) {
+    sid = generateUUID()
+    sessionStorage.setItem('elvin_session_id', sid)
   }
-  var list = cookie.split(';')
-  var cookieObj = {}
-  try {
-    for (var list_1 = __values(list), list_1_1 = list_1.next(); !list_1_1.done; list_1_1 = list_1.next()) {
-      var item = list_1_1.value
-      var pair = item.split('=')
-      var cookieKey = isString(pair[0]) && pair[0].trim()
-      if (cookieKey && isString(pair[1])) {
-        cookieObj[cookieKey] = pair[1].trim()
-      }
-    }
-  } catch (e_1_1) {
-    e_1 = { error: e_1_1 }
-  } finally {
-    try {
-      if (list_1_1 && !list_1_1.done && (_a = list_1.return)) _a.call(list_1)
-    } finally {
-      if (e_1) throw e_1.error
-    }
-  }
-  return cookieObj[name] || ''
+  return sid
 }
 
-function isString(what) {
-  return Object.prototype.toString.call(what) === '[object String]'
-}
-
-function __values(o) {
-  var s = typeof Symbol === 'function' && Symbol.iterator,
-    m = s && o[s],
-    i = 0
-  if (m) return m.call(o)
-  if (o && typeof o.length === 'number')
-    return {
-      next: function () {
-        if (o && i >= o.length) o = void 0
-        return { value: o && o[i++], done: !o }
-      }
-    }
-  throw new TypeError(s ? 'Object is not iterable.' : 'Symbol.iterator is not defined.')
-}
-
-export function mathRNG() {
-  var rnds = new Array(16)
-  var r = 0
-  for (var i = 0; i < 16; i++) {
-    if ((i & 0x03) === 0) {
-      r = Math.random() * 0x100000000
-    }
-    rnds[i] = (r >>> ((i & 0x03) << 3)) & 0xff
-  }
-  return rnds
-}
-
-function bytesToUuid(buf) {
-  var byteToHex = []
-  for (var index = 0; index < 256; ++index) {
-    byteToHex[index] = (index + 0x100).toString(16).substr(1)
-  }
-  var i = 0
-  var bth = byteToHex
-  // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
-  return [
-    bth[buf[i++]],
-    bth[buf[i++]],
-    bth[buf[i++]],
-    bth[buf[i++]],
-    '-',
-    bth[buf[i++]],
-    bth[buf[i++]],
-    '-',
-    bth[buf[i++]],
-    bth[buf[i++]],
-    '-',
-    bth[buf[i++]],
-    bth[buf[i++]],
-    '-',
-    bth[buf[i++]],
-    bth[buf[i++]],
-    bth[buf[i++]],
-    bth[buf[i++]],
-    bth[buf[i++]],
-    bth[buf[i++]]
-  ].join('')
-}
-export function uuid() {
-  var rnds = mathRNG()
-  // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
-  rnds[6] = (rnds[6] & 0x0f) | 0x40
-  rnds[8] = (rnds[8] & 0x3f) | 0x80
-  return bytesToUuid(rnds)
-}
-
-export function unknownToString(target: unknown): string {
-  if (variableTypeDetection.isString(target)) {
-    return target as string
-  }
-  if (variableTypeDetection.isUndefined(target)) {
-    return 'undefined'
-  }
-  return JSON.stringify(target)
+export function generateUUID(): string {
+  let d = new Date().getTime()
+  const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (d + Math.random() * 16) % 16 | 0
+    d = Math.floor(d / 16)
+    return (c == 'x' ? r : (r & 0x3) | 0x8).toString(16)
+  })
+  return uuid
 }
 
 export function getBigVersion(version: string) {
@@ -299,24 +200,6 @@ export function getBigVersion(version: string) {
 
 export function isHttpFail(code: number) {
   return code === 0 || code === HTTP_CODE.BAD_REQUEST || code > HTTP_CODE.UNAUTHORIZED
-}
-
-/**
- * 给url添加query
- * @param url
- * @param query
- */
-export function setUrlQuery(url: string, query: object) {
-  const queryArr = []
-  Object.keys(query).forEach((k) => {
-    queryArr.push(`${k}=${query[k]}`)
-  })
-  if (url.indexOf('?') !== -1) {
-    url = `${url}&${queryArr.join('&')}`
-  } else {
-    url = `${url}?${queryArr.join('&')}`
-  }
-  return url
 }
 
 /**
