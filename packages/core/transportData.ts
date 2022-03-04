@@ -4,6 +4,7 @@ import { getCommon } from '../utils/uaParser'
 import { EMethods, InitOptions } from '../types/options'
 import { isBrowserEnv, _support } from './global'
 import { getLocationHref, getYMDHMS, getUid, getSid } from '../utils/helpers'
+import { ActionTypeKeys, ErrorReport, HistryReport, HttpReport, PerformanceReport, ResourceErrorReport } from 'packages/types/common'
 
 export class TransportData {
   queue: Queue
@@ -50,7 +51,7 @@ export class TransportData {
     return this.sessionId
   }
 
-  getTransportData(data) {
+  getTransportData(data: HttpReport | ResourceErrorReport | ErrorReport | HistryReport) {
     return {
       ...data,
       ...getCommon(),
@@ -65,8 +66,8 @@ export class TransportData {
     return targetUrl.indexOf(this.reportUrl) !== -1
   }
 
-  send(data) {
-    if (isBrowserEnv) {
+  send(data: HttpReport | ResourceErrorReport | ErrorReport | HistryReport | PerformanceReport) {
+    if (isBrowserEnv && ActionTypeKeys.includes(data.action_type)) {
       return this.xhrPost(data)
     }
   }

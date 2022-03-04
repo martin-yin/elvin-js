@@ -3,7 +3,7 @@ import { supportsHistory, _global } from '../core/global'
 import { ReplaceHandler, subscribeEvent, triggerHandlers } from '../core/subscribe'
 import { transportData } from '../core/transportData'
 import { EVENTTYPES, HTTPTYPE, voidFun } from '../shared'
-import { REPORTXMLHttpRequest } from '../types/common'
+import { ActionTypeKeys, HttpReport, REPORTXMLHttpRequest } from '../types/common'
 import { EMethods } from '../types/options'
 import { getLocationHref, getTimestamp, getYMDHMS, isHttpFail, on, replaceOld } from '../utils/helpers'
 import { isExistProperty, variableTypeDetection } from '../utils/is'
@@ -55,37 +55,42 @@ function xhrReplace(): void {
   replaceOld(originalXhrProto, 'open', (originalOpen: voidFun): voidFun => {
     return function (this: REPORTXMLHttpRequest, ...args: any[]): void {
       const method = variableTypeDetection.isString(args[0]) ? args[0].toUpperCase() : args[0]
-      this.report_xhr = {
+
+      this.before_report_data = {
         method,
         url: args[1],
-        type: HTTPTYPE.XHR,
-        load_time: 0,
         http_url: args[1].split('?')[0] ? args[1].split('?')[0] : args[1],
-        status: 0,
-        status_text: '',
-        happen_day: getYMDHMS(),
-        action_type: 'HTTP_LOG',
-        response_text: '',
-        request_text: args[1].split('?')[1]
+        type: HTTPTYPE.XHR
       }
+
       originalOpen.apply(this, args)
     }
   })
   replaceOld(originalXhrProto, 'send', (originalSend: voidFun): voidFun => {
     return function (this: REPORTXMLHttpRequest, ...args: any[]): void {
-      const { method, url } = this.report_xhr
-      this.startTime = getTimestamp()
+      const { method, url } = this
+      const httoReport: HttpReport = {
+        ...this.before_report_data,
+        status: 0,
+        status_text: '',
+        happen_day: getYMDHMS(),
+        action_type: ActionTypeKeys['4'],
+        response_text: '',
+        request_text: args[1].split('?')[1],
+        happen_time: 0,
+        load_time: 0
+      }
+      const startTime = getTimestamp()
       on(this, 'loadend', function (this: REPORTXMLHttpRequest) {
         if (method === EMethods.Post && transportData.isSdkTransportUrl(url)) return
-        const { responseType, response, status, statusText } = this
-        const eTime = getTimestamp()
+        const { responseType, response, status } = this
         this.report_xhr.status = status
         if (['', 'json', 'text'].indexOf(responseType) !== -1) {
           this.report_xhr.response_text = typeof response === 'object' ? JSON.stringify(response) : response
         }
-        this.report_xhr.status_text = isHttpFail(status) ? 'fail' : fromHttpStatus(status)
-        this.report_xhr.happen_time = getTimestamp()
-        this.report_xhr.load_time = eTime - this.startTime
+        httoReport.status_text = isHttpFail(status) ? 'fail' : fromHttpStatus(status)
+        httoReport.happen_time = getTimestamp()
+        httoReport.load_time = getTimestamp() - startTime
         triggerHandlers(EVENTTYPES.XHR, this.report_xhr)
       })
       originalSend.apply(this, args)

@@ -1,4 +1,7 @@
 import { HTTPTYPE } from '../shared'
+import { HttpMethod } from './options'
+
+export const ActionTypeKeys = ['PERFORMANCE', 'PAGEVIEW', 'RESOURCEERROR', 'JSERROR', 'HTTPLOG'] as const
 
 export interface IAnyObject {
   [key: string]: any
@@ -10,41 +13,59 @@ export interface ResourceErrorTarget {
   localName?: string
 }
 
-export interface REPORTHttp {
+type ActionTypes = {
+  action_type: typeof ActionTypeKeys[number]
+}
+
+export interface HttpReport extends ActionTypes {
+  method: HttpMethod
+  url: string
   type: HTTPTYPE
-  traceId?: string
-  method?: string
-  url?: string
-  status?: number
-  reqData?: any
-  // statusText?: string
-  sTime?: number
-  elapsedTime?: number
-  responseText?: any
-  time?: number
-  isSdkUrl?: boolean
-  // for wx
-  errMsg?: string
+  http_url: string
+  status: number
+  status_text: string
+  happen_day: string
+  response_text: string
+  request_text: string
+  happen_time: number
+  load_time: number
 }
 
 export interface REPORTXMLHttpRequest extends XMLHttpRequest {
   [key: string]: any
-  report_xhr?: REPORTHttp | any
-  before_report_xhr: any
+  before_report_data: {
+    method: HttpMethod
+    url: string
+    http_url: string
+    type: HTTPTYPE
+  }
 }
 
-export interface ErrorStack {
-  args: any[]
-  func: string
-  column: number
-  line: number
-  url: string
-}
+export type ResourceErrorReport = Record<'source_url' | 'element_type', string> & Record<'happen_time', number> & ActionTypes
 
-export interface IntegrationError {
-  message: string
-  name: string
-  stacks: ErrorStack[]
-}
+export type ErrorReport = Record<'message' | 'stack_frames' | 'error_name' | 'component_name', string> &
+  Record<'happen_time', number> &
+  ActionTypes
 
-export type TNumStrObj = number | string | object
+export type HistryReport = Record<'page_url' | 'document_title' | 'referrer' | 'encode', string> &
+  Record<'happen_time', number> &
+  ActionTypes
+
+export interface PerformanceReport extends ActionTypes {
+  dns: number
+  tcp: number
+  ssl: number
+  ttfb: number
+  request: number
+  dom: number
+  response: number
+  firstbyte: number
+  fpt: number
+  tti: number
+  ready: number
+  load: number
+  redirect: number
+  appcache: number
+  load_type: number
+  happen_time: number
+}

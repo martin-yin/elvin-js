@@ -12,7 +12,7 @@ export function handleVueError(err: Error, vm, info: string, Vue): void {
     stack_frames: JSON.stringify(stack) || '',
     happen_time: getTimestamp(),
     error_name: err.name,
-    action_type: 'JS_ERROR'
+    action_type: 'JSERROR'
   }
 
   if (variableTypeDetection.isString(version)) {

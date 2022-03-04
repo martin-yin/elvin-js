@@ -1,4 +1,4 @@
-import { ResourceErrorTarget } from '../types/common'
+import { ActionTypeKeys, ErrorReport, PerformanceReport, ResourceErrorReport, ResourceErrorTarget } from '../types/common'
 import { each, getTimestamp } from '../utils/helpers'
 import ErrorStackParser from 'error-stack-parser'
 
@@ -7,20 +7,20 @@ const resourceMap = {
   script: 'js脚本'
 }
 
-export function resourceTransform(target: ResourceErrorTarget) {
+export function resourceTransform(target: ResourceErrorTarget): ResourceErrorReport {
   return {
-    action_type: 'RESOURCE',
+    action_type: 'RESOURCEERROR',
     happen_time: getTimestamp(),
     source_url: target.src.slice(0, 100) || target.href.slice(0, 100),
     element_type: resourceMap[target.localName] || target.localName
   }
 }
 
-export function errorTransform(target: ErrorEvent) {
+export function errorTransform(target: ErrorEvent): ErrorReport {
   const stacks = ErrorStackParser.parse(target.error)
   const error_name = target.error.stack.split(':')[0]
   return {
-    action_type: 'JS_ERROR',
+    action_type: 'JSERROR',
     message: `${target.error.message}`,
     stack_frames: JSON.stringify(stacks) || '',
     happen_time: getTimestamp(),
@@ -29,7 +29,7 @@ export function errorTransform(target: ErrorEvent) {
   }
 }
 
-export function performanceTransform(callback: (data) => void): void {
+export function performanceTransform(callback: (data: PerformanceReport) => void): void {
   // redirect: transformNumber(performance.redirectEnd - performance.redirectStart),
   // appcache: transformNumber(performance.domainLookupStart - performance.fetchStart),
   // lookup_domain: transformNumber(performance.domainLookupEnd - performance.domainLookupStart),
@@ -68,7 +68,7 @@ export function performanceTransform(callback: (data) => void): void {
   ]
   let timing = null
   let type = 1
-  const data = {
+  const data: PerformanceReport = {
     dns: 0,
     tcp: 0,
     ssl: 0,
@@ -84,7 +84,7 @@ export function performanceTransform(callback: (data) => void): void {
     redirect: 0,
     appcache: 0,
     load_type: 1,
-    action_type: 'PERFORMANCE',
+    action_type: ActionTypeKeys[0],
     happen_time: 0
   }
   const stateCheck = setInterval(() => {

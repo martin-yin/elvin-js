@@ -1,4 +1,4 @@
-import { ResourceErrorTarget } from '../types/common'
+import { ActionTypeKeys, HistryReport, HttpReport, ResourceErrorTarget } from '../types/common'
 import { transportData } from '../core/transportData'
 import { getTimestamp } from '../utils/helpers'
 import { errorTransform, performanceTransform, resourceTransform } from '../core/transformData'
@@ -20,7 +20,7 @@ const HandleEvents = {
   /**
    * 处理xhr、fetch回调
    */
-  handleHttp(data): void {
+  handleHttp(data: HttpReport): void {
     transportData.send(data)
   },
   /**
@@ -53,9 +53,9 @@ const HandleEvents = {
     })
   },
   handlePv(data: HashChangeEvent): void {
-    const history = {
+    const history: HistryReport = {
       page_url: data.newURL,
-      action_type: 'PAGE_VIEW',
+      action_type: ActionTypeKeys[0],
       document_title: document.title,
       referrer: data.oldURL,
       encode: document.charset,

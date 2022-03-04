@@ -4,8 +4,8 @@ import { addReplaceHandler } from './replace'
 
 export function setupReplace(): void {
   addReplaceHandler({
-    callback: (e: any) => {
-      HandleEvents.performanceReplace(e)
+    callback: () => {
+      HandleEvents.handlePerformance()
     },
     type: EVENTTYPES.PERFORMANCE
   })
