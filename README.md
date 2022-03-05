@@ -1,5 +1,24 @@
 # elvin
 
+
+## todo
+```typescript
+
+// 1. 类型补齐 + 优化 
+
+2. Dom 点击事件捕获，并获取到DOM 路径。
+
+3. Featch请求抓取
+
+4. Vue捕获功能重构
+
+5. PV 数据初始化获取
+
+6. Promise 错误捕获
+
+7. npm发包
+
+```
 ## 介绍
 
 elvin 是 web 系统监控。

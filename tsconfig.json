@@ -23,5 +23,5 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["es6", "dom"]
   },
-  "include": ["packages"]
+  "include": ["packages", "__test__"]
 }

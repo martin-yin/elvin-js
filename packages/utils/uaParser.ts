@@ -29,12 +29,13 @@ export const getCommon = () => {
   }
 }
 
-function getScreen() {
+export const getScreen = () => {
   const w = document.documentElement.clientWidth || document.body.clientWidth
   const h = document.documentElement.clientHeight || document.body.clientHeight
   return w + 'x' + h
 }
-function getLang() {
+
+export const getLang = () => {
   let lang = navigator.language || (navigator as any).userLanguage //常规浏览器语言和IE浏览器
   lang = lang.substr(0, 2) //截取lang前2位字符
   return lang

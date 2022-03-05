@@ -1,7 +1,9 @@
 import { HTTP_CODE } from '../shared'
 import { IAnyObject } from '../types/common'
-import { nativeToString, variableTypeDetection } from './is'
+import { nativeToString } from './is'
 import ErrorStackParser from 'error-stack-parser'
+
+export const defaultFunctionName = '<anonymous>'
 
 export function getLocationHref(): string {
   if (typeof document === 'undefined' || document.location == null) return ''
@@ -75,7 +77,6 @@ export function isTypeOf(data, type = null) {
   return type ? n === type : n
 }
 
-export const defaultFunctionName = '<anonymous>'
 /**
  * 需要获取函数名，匿名则返回<anonymous>
  * ../param {unknown} fn 需要获取函数名的函数本体
@@ -86,48 +87,6 @@ export function getFunctionName(fn: unknown): string {
     return defaultFunctionName
   }
   return fn.name || defaultFunctionName
-}
-
-// 函数防抖
-/**
- *
- * ../param fn 需要防抖的函数
- * ../param delay 防抖的时间间隔
- * ../param isImmediate 是否需要立即执行，默认为false，第一次是不执行的
- * ../returns 返回一个包含防抖功能的函数
- */
-// export const debounce = (fn: voidFun, delay: number, isImmediate = false): voidFun => {
-//   let timer = null
-//   return function (...args: any) {
-//     if (isImmediate) {
-//       fn.apply(this, args)
-//       isImmediate = false
-//       return
-//     }
-//     clearTimeout(timer)
-//     timer = setTimeout(() => {
-//       fn.apply(this, args)
-//     }, delay)
-//   }
-// }
-
-// 函数节流
-/**
- *
- * ../param fn 需要节流的函数
- * ../param delay 节流的时间间隔
- * ../returns 返回一个包含节流功能的函数
- */
-export const throttle = (fn: Function, delay: number): Function => {
-  let canRun = true
-  return function (...args: any) {
-    if (!canRun) return
-    fn.apply(this, args)
-    canRun = false
-    setTimeout(() => {
-      canRun = true
-    }, delay)
-  }
 }
 
 /**
@@ -204,7 +163,7 @@ export function isHttpFail(code: number) {
 
 /**
  * 解析字符串错误信息，返回message、name、stacks
- * @param str error string
+ * @param error error string
  */
 export function parseErrorString(error: Error): StackFrame[] {
   return ErrorStackParser.parse(error)

@@ -44,6 +44,7 @@ const HandleEvents = {
   },
   handleUnhandleRejection(event: PromiseRejectionEvent): void {
     console.log(event, 'ev')
+    // getLocationHref
   },
   handlePerformance(): void {
     const performance = window.performance

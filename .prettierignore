@@ -3,3 +3,5 @@
 /node_modules
 *.md
 .eslintrc.js
+jest.config.js
+/__test__
