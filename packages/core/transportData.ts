@@ -4,7 +4,7 @@ import { getCommon } from '../utils/uaParser'
 import { EMethods, InitOptions } from '../types/options'
 import { isBrowserEnv, _support } from './global'
 import { getLocationHref, getYMDHMS, getUid, getSid } from '../utils/helpers'
-import { ActionTypeKeys, ErrorReport, HistryReport, HttpReport, PerformanceReport, ResourceErrorReport } from 'packages/types/common'
+import { ActionTypeKeys, ErrorReport, HistryReport, HttpReport, PerformanceReport, ResourceErrorReport } from '../types/common'
 
 export class TransportData {
   queue: Queue

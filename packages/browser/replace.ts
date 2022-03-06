@@ -1,4 +1,4 @@
-import { fromHttpStatus } from 'packages/utils/httpStatus'
+import { fromHttpStatus } from '../utils/httpStatus'
 import { supportsHistory, _global } from '../core/global'
 import { ReplaceHandler, subscribeEvent, triggerHandlers } from '../core/subscribe'
 import { transportData } from '../core/transportData'
@@ -55,7 +55,6 @@ function xhrReplace(): void {
   replaceOld(originalXhrProto, 'open', (originalOpen: voidFun): voidFun => {
     return function (this: REPORTXMLHttpRequest, ...args: any[]): void {
       const method = variableTypeDetection.isString(args[0]) ? args[0].toUpperCase() : args[0]
-
       this.before_report_data = {
         method,
         url: args[1],
@@ -68,7 +67,7 @@ function xhrReplace(): void {
   })
   replaceOld(originalXhrProto, 'send', (originalSend: voidFun): voidFun => {
     return function (this: REPORTXMLHttpRequest, ...args: any[]): void {
-      const { method, url } = this
+      const { method, url } = this.before_report_data
       const httoReport: HttpReport = {
         ...this.before_report_data,
         status: 0,
@@ -76,22 +75,24 @@ function xhrReplace(): void {
         happen_day: getYMDHMS(),
         action_type: ActionTypeKeys['4'],
         response_text: '',
-        request_text: args[1].split('?')[1],
+        request_text: '',
         happen_time: 0,
         load_time: 0
       }
       const startTime = getTimestamp()
       on(this, 'loadend', function (this: REPORTXMLHttpRequest) {
-        if (method === EMethods.Post && transportData.isSdkTransportUrl(url)) return
+        if (method === EMethods.Post && transportData.isSdkTransportUrl(url)) {
+          return
+        }
         const { responseType, response, status } = this
-        this.report_xhr.status = status
+        httoReport.status = status
         if (['', 'json', 'text'].indexOf(responseType) !== -1) {
-          this.report_xhr.response_text = typeof response === 'object' ? JSON.stringify(response) : response
+          httoReport.response_text = typeof response === 'object' ? JSON.stringify(response) : response
         }
         httoReport.status_text = isHttpFail(status) ? 'fail' : fromHttpStatus(status)
         httoReport.happen_time = getTimestamp()
         httoReport.load_time = getTimestamp() - startTime
-        triggerHandlers(EVENTTYPES.XHR, this.report_xhr)
+        triggerHandlers(EVENTTYPES.XHR, httoReport)
       })
       originalSend.apply(this, args)
     }

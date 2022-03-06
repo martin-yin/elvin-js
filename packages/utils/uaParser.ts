@@ -1,4 +1,4 @@
-import { SDK_VERSION } from 'packages'
+import { SDK_VERSION } from '../shared/config'
 import { UAParser } from 'ua-parser-js'
 
 export const getUaResult = () => {
@@ -21,9 +21,8 @@ export const getCommon = () => {
     language: getLang(),
     screen: screen.width + 'x' + screen.height,
     vp: getScreen(),
-    connectionType: u ? u.effectiveType : '',
+    connection_type: u ? u.effectiveType : '',
     sdkVersion: SDK_VERSION,
-    monitorId: '',
     environment: '',
     ...getUaResult()
   }
