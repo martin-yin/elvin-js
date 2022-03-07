@@ -9,7 +9,8 @@
     "format": "prettier --write packages/**/*.{ts,js}",
     "tsc": "tsc --watch",
     "build": "set NODE_ENV=production&& rollup -c rollup.config.js",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "husky install"
   },
   "author": "diaosiwei",
   "homepage": "https://github.com/galaxy-softwares/elvin-js",
@@ -37,7 +38,6 @@
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "husky": "^4.3.8",
     "jest": "^27.5.1",
     "lint-staged": "^11.0.0",
     "prettier": "^2.3.0",
@@ -66,5 +66,8 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "devDependencies": {
+    "husky": "^7.0.4"
   }
 }
