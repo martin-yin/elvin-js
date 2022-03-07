@@ -237,7 +237,7 @@ function domReplace(): void {
   on(
     _global.document,
     'click',
-    function (ev: PointerEvent) {
+    function (ev: Event) {
       triggerHandlers(EVENTTYPES.DOM, ev)
     },
     true

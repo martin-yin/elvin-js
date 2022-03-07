@@ -40,7 +40,7 @@ export function setupReplace(): void {
     type: EVENTTYPES.UNHANDLEDREJECTION
   })
   addReplaceHandler({
-    callback: (data) => {
+    callback: (data: Event) => {
       HandleEvents.handleDomOperation(data)
     },
     type: EVENTTYPES.DOM

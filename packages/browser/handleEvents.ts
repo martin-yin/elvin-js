@@ -4,14 +4,16 @@ import { getElmPath, getTimestamp } from '../utils/helpers'
 import { errorTransform, performanceTransform, resourceTransform } from '../core/transformData'
 
 const HandleEvents = {
-  handleDomOperation(event) {
+  handleDomOperation(event: Event) {
+    const dom = event.target as HTMLElement
+    const input = event.target as HTMLInputElement
     const data = {
-      class_name: event.target.className,
-      inner_text: event.target.innerText,
-      tag_name: event.target.tagName,
+      class_name: dom.className,
+      inner_text: dom.innerText,
+      tag_name: dom.tagName,
       behavior_type: event.type,
-      input_value: event.target.inputValue,
-      placeholder: event.target.placeholder,
+      input_value: input.value,
+      placeholder: input.placeholder,
       action_type: ActionTypeKeys[5],
       happen_time: getTimestamp(),
       path: getElmPath(event.target)
