@@ -16,13 +16,34 @@ export function resourceTransform(target: ResourceErrorTarget): ResourceErrorRep
   }
 }
 
-export function errorTransform(target: ErrorEvent): ErrorReport {
-  const stacks = ErrorStackParser.parse(target.error)
-  const error_name = target.error.stack.split(':')[0]
+export function promiseErrorTransform(target: PromiseRejectionEvent) {
+  //reason
+
+  console.log(target.reason)
+}
+
+export function errorTransform(target: any, isPromise = false): ErrorReport {
+  // 回头再来优化！！！！！！！！！
+  let stack_frames = []
+  let error_name = ''
+  let message = ''
+  let stack = ''
+  if (!isPromise) {
+    stack_frames = ErrorStackParser.parse(target.error)
+    error_name = target.error.stack.split(':')[0]
+    message = target.error.message
+    stack = target.error.toString()
+  } else {
+    stack_frames = ErrorStackParser.parse(target.reason)
+    stack = target.reason.stack
+    error_name = ''
+    message = target.reason.message
+  }
   return {
     action_type: 'JSERROR',
-    message: `${target.error.message}`,
-    stack_frames: JSON.stringify(stacks) || '',
+    message,
+    stack,
+    stack_frames: JSON.stringify(stack_frames) || '',
     happen_time: getTimestamp(),
     error_name,
     component_name: target.filename

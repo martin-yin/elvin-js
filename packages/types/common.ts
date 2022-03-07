@@ -1,7 +1,7 @@
 import { HTTPTYPE } from '../shared'
 import { HttpMethod } from './options'
 
-export const ActionTypeKeys = ['PERFORMANCE', 'PAGEVIEW', 'RESOURCEERROR', 'JSERROR', 'HTTPLOG'] as const
+export const ActionTypeKeys = ['PERFORMANCE', 'PAGEVIEW', 'RESOURCEERROR', 'JSERROR', 'HTTPLOG', 'OPERATION'] as const
 
 export interface IAnyObject {
   [key: string]: any
@@ -43,7 +43,7 @@ export interface REPORTXMLHttpRequest extends XMLHttpRequest {
 
 export type ResourceErrorReport = Record<'source_url' | 'element_type', string> & Record<'happen_time', number> & ActionTypes
 
-export type ErrorReport = Record<'message' | 'stack_frames' | 'error_name' | 'component_name', string> &
+export type ErrorReport = Record<'message' | 'stack_frames' | 'stack' | 'error_name' | 'component_name', string> &
   Record<'happen_time', number> &
   ActionTypes
 

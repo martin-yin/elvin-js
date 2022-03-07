@@ -22,7 +22,7 @@ export const getCommon = () => {
     screen: screen.width + 'x' + screen.height,
     vp: getScreen(),
     connection_type: u ? u.effectiveType : '',
-    sdkVersion: SDK_VERSION,
+    sdk_version: SDK_VERSION,
     environment: '',
     ...getUaResult()
   }

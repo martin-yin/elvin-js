@@ -1,22 +1,25 @@
 import { ActionTypeKeys, HistryReport, HttpReport, ResourceErrorTarget } from '../types/common'
 import { transportData } from '../core/transportData'
-import { getTimestamp } from '../utils/helpers'
+import { getElmPath, getTimestamp } from '../utils/helpers'
 import { errorTransform, performanceTransform, resourceTransform } from '../core/transformData'
 
 const HandleEvents = {
-  // handleDomOperation(event) {
-  //   const data = {
-  //     class_name: event.target.className,
-  //     inner_text: event.target.innerText,
-  //     tag_name: event.target.tagName,
-  //     behavior_type: event.type,
-  //     input_value: event.target.inputValue,
-  //     placeholder: event.target.placeholder,
-  //     action_type: 'OPERATION',
-  //     happen_time: getTimestamp()
-  //   }
-  //   transportData.send(data)
-  // },
+  handleDomOperation(event) {
+    const data = {
+      class_name: event.target.className,
+      inner_text: event.target.innerText,
+      tag_name: event.target.tagName,
+      behavior_type: event.type,
+      input_value: event.target.inputValue,
+      placeholder: event.target.placeholder,
+      action_type: ActionTypeKeys[5],
+      happen_time: getTimestamp(),
+      path: getElmPath(event.target)
+    }
+    if (data.path.indexOf('div') >= 0) {
+      transportData.send(data as any)
+    }
+  },
   /**
    * 处理xhr、fetch回调
    */
@@ -43,8 +46,8 @@ const HandleEvents = {
     HandleEvents.handlePv(data)
   },
   handleUnhandleRejection(event: PromiseRejectionEvent): void {
-    console.log(event, 'ev')
-    // getLocationHref
+    const data = errorTransform(event, true)
+    transportData.send(data)
   },
   handlePerformance(): void {
     const performance = window.performance
@@ -56,7 +59,7 @@ const HandleEvents = {
   handlePv(data: HashChangeEvent): void {
     const history: HistryReport = {
       page_url: data.newURL,
-      action_type: ActionTypeKeys[0],
+      action_type: ActionTypeKeys[1],
       document_title: document.title,
       referrer: data.oldURL,
       encode: document.charset,
