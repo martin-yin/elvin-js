@@ -1,7 +1,7 @@
 import { HTTPTYPE } from '../shared'
 import { HttpMethod } from './options'
 
-export const ActionTypeKeys = ['PERFORMANCE', 'PAGEVIEW', 'RESOURCEERROR', 'JSERROR', 'HTTPLOG', 'OPERATION'] as const
+export const ActionTypeKeys = ['PERFORMANCE', 'PAGE_VIEW', 'RESOURCE_ERROR', 'JS_ERROR', 'HTTP_LOG', 'OPERATION'] as const
 
 export interface IAnyObject {
   [key: string]: any
@@ -59,13 +59,13 @@ export interface PerformanceReport extends ActionTypes {
   request: number
   dom: number
   response: number
-  firstbyte: number
+  first_byte: number
   fpt: number
   tti: number
   ready: number
   load: number
   redirect: number
   appcache: number
-  load_type: number
+  load_type: string
   happen_time: number
 }

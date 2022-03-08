@@ -9,47 +9,26 @@ const resourceMap = {
 
 export function resourceTransform(target: ResourceErrorTarget): ResourceErrorReport {
   return {
-    action_type: 'RESOURCEERROR',
+    action_type: 'RESOURCE_ERROR',
     happen_time: getTimestamp(),
     source_url: target.src.slice(0, 100) || target.href.slice(0, 100),
     element_type: resourceMap[target.localName] || target.localName
   }
 }
 
-export function promiseErrorTransform(target: PromiseRejectionEvent) {
-  //reason
-
-  console.log(target.reason)
-}
-
 export function errorTransform(target: any, isPromise = false): ErrorReport {
-  // 回头再来优化！！！！！！！！！
-  let stack_frames = []
-  let error_name = ''
-  let message = ''
-  let stack = ''
-  if (!isPromise) {
-    stack_frames = ErrorStackParser.parse(target.error)
-    error_name = target.error.stack.split(':')[0]
-    message = target.error.message
-    stack = target.error.toString()
-  } else {
-    stack_frames = ErrorStackParser.parse(target.reason)
-    stack = target.reason.stack
-    error_name = ''
-    message = target.reason.message
-  }
+  const stack_frames = isPromise ? ErrorStackParser.parse(target.reason) : ErrorStackParser.parse(target.error)
   return {
-    action_type: 'JSERROR',
-    message,
-    stack,
+    action_type: 'JS_ERROR',
+    error_name: isPromise ? 'Promise Error' : target.error.stack.split(':')[0],
+    message: isPromise ? target.reason.message : target.error.message,
+    stack: isPromise ? target.reason.stack : target.error.toString(),
     stack_frames: JSON.stringify(stack_frames) || '',
     happen_time: getTimestamp(),
-    error_name,
     component_name: target.filename
   }
 }
-
+// Todo 从新理清楚关系。
 export function performanceTransform(callback: (data: PerformanceReport) => void): void {
   // redirect: transformNumber(performance.redirectEnd - performance.redirectStart),
   // appcache: transformNumber(performance.domainLookupStart - performance.fetchStart),
@@ -97,14 +76,14 @@ export function performanceTransform(callback: (data: PerformanceReport) => void
     request: 0,
     dom: 0,
     response: 0,
-    firstbyte: 0,
+    first_byte: 0,
     fpt: 0,
     tti: 0,
     ready: 0,
     load: 0,
     redirect: 0,
     appcache: 0,
-    load_type: 1,
+    load_type: '',
     action_type: ActionTypeKeys[0],
     happen_time: 0
   }
@@ -113,8 +92,8 @@ export function performanceTransform(callback: (data: PerformanceReport) => void
       clearInterval(stateCheck)
       // 根据PerformanceNavigationTiming计算更准确
       if ('function' == typeof window.PerformanceNavigationTiming) {
-        const c = performance.getEntriesByType('navigation')[0]
-        c && ((timing = c), (type = 2), (data.load_type = 2))
+        const c: any = performance.getEntriesByType('navigation')[0]
+        c && ((timing = c), (type = 2), (data.load_type = c.type))
       }
       data.happen_time = getTimestamp()
       each(

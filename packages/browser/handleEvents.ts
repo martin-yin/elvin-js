@@ -41,6 +41,7 @@ const HandleEvents = {
     const data = errorTransform(target as ErrorEvent)
     transportData.send(data)
   },
+  // Todo: History 会触发两次
   handleHistory(data: any): void {
     HandleEvents.handlePv(data)
   },
@@ -63,7 +64,7 @@ const HandleEvents = {
       page_url: data.newURL,
       action_type: ActionTypeKeys[1],
       document_title: document.title,
-      referrer: data.oldURL,
+      referrer: data.oldURL || '',
       encode: document.charset,
       happen_time: getTimestamp()
     }

@@ -172,11 +172,11 @@ export function parseErrorString(error: Error): StackFrame[] {
 // 回头优化！！！！
 export const getElmPath = function (e) {
   if (!e || 1 !== e.nodeType) return ''
-  var ret = [],
+  let ret = [],
     deepLength = 0, // 层数，最多5层
     elm = '' // 元素
   ret.push(`(${e.innerText.substr(0, 50)})`)
-  for (var target = e || null; target && deepLength++ < 5 && !('html' === (elm = normalTarget(target))); ) {
+  for (let target = e || null; target && deepLength++ < 5 && !('html' === (elm = normalTarget(target))); ) {
     ret.push(elm)
     target = target.parentNode
   }
@@ -184,7 +184,7 @@ export const getElmPath = function (e) {
 }
 
 const normalTarget = function (e) {
-  var t,
+  let t,
     n,
     r,
     a,
@@ -202,7 +202,7 @@ const normalTarget = function (e) {
       }
     }
   }
-  var s = ['type', 'name', 'title', 'alt']
+  const s = ['type', 'name', 'title', 'alt']
   for (i = 0; i < s.length; i++) (r = s[i]), (a = e.getAttribute(r)) && o.push('['.concat(r, '="').concat(a, '"]'))
   return o.join('')
 }
