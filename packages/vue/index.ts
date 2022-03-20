@@ -6,7 +6,7 @@ import ErrorStackParser from 'error-stack-parser'
 export function handleVueError(err: Error, vm, info: string, Vue): void {
   const version = Vue.version
   const stack = ErrorStackParser.parse(err)
-  let data = {
+  let data: any = {
     message: `${err.message}`,
     stack: err.stack,
     stack_frames: JSON.stringify(stack) || '',

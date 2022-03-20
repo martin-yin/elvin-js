@@ -143,6 +143,10 @@ export function getSid() {
   return sid
 }
 
+export function changeSid() {
+  sessionStorage.setItem('elvin_session_id', generateUUID())
+}
+
 export function generateUUID(): string {
   let d = new Date().getTime()
   const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -165,7 +169,7 @@ export function isHttpFail(code: number) {
  * 解析字符串错误信息，返回message、name、stacks
  * @param error error string
  */
-export function parseErrorString(error: Error): StackFrame[] {
+export function parseErrorString(error: Error) {
   return ErrorStackParser.parse(error)
 }
 

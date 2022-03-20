@@ -1,6 +1,6 @@
 import { ActionTypeKeys, HistryReport, HttpReport, ResourceErrorTarget } from '../types/common'
 import { transportData } from '../core/transportData'
-import { getElmPath, getTimestamp } from '../utils/helpers'
+import { changeSid, getElmPath, getTimestamp } from '../utils/helpers'
 import { errorTransform, performanceTransform, resourceTransform } from '../core/transformData'
 
 const HandleEvents = {
@@ -54,6 +54,7 @@ const HandleEvents = {
   },
   handlePerformance(): void {
     const performance = window.performance
+    changeSid()
     if (!performance || 'object' !== typeof performance) return
     performanceTransform((data) => {
       transportData.send(data)
