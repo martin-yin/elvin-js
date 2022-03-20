@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": false,
+    "declarationDir": "./types",
+    "outDir": "./lib"
+  },
+  "include": ["packages"],
+  "exclude":["__test__/**/*.ts"]
+}

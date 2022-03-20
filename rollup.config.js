@@ -11,7 +11,11 @@ import resolve from '@rollup/plugin-node-resolve'
 
 // ts
 const tsPlugin = typescript2({
-  tsconfig: getPath('./tsconfig.json') // 导入本地ts配置
+  tsconfig: 'tsconfig.build.json',
+  outDir: './lib',
+  paths: {
+    'types/*': ['../../types/*']
+  }
 })
 
 // 基础配置

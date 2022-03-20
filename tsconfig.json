@@ -9,12 +9,8 @@
     "noUnusedLocals": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": false,
     "target": "ES5", // 编译成什么版本
     "module": "ESNext", // 当前代码语法
-    "outDir": "./lib",
-    "declarationDir": "./lib/types",
     "allowUnreachableCode": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -23,5 +19,5 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["es6", "dom"]
   },
-  "include": ["packages", "__test__"]
+  "include": ["packages/**/*.ts", "__test__/**/*.ts"]
 }
